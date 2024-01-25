@@ -22,7 +22,7 @@ audio.addEventListener('ended', function() {
 var audio2 = document.getElementById('myAudio2');
 
 // Optional: You can set other audio properties here, such as volume, playback speed, etc.
-audio2.volume = 0.5;
+audio2.volume = 1;
 
 // Event listener to restart the audio when it ends
 audio2.addEventListener('ended', function() {
@@ -50,8 +50,8 @@ audio2.addEventListener('ended', function() {
 
 
 scene.background = new THREE.Color( 0xbfe3dd );
-scene.environment = pmremGenerator.fromScene( new RoomEnvironment( renderer ), 0.00001 ).texture;
-scene.environment.envMapIntensity =0.000001
+scene.environment = pmremGenerator.fromScene( new RoomEnvironment( renderer ), 0.001 ).texture;
+scene.environment.envMapIntensity =0.0001
 const camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 100 );
 camera.position.set( 5, 2, 8 );
 
@@ -102,19 +102,19 @@ controls.enableDamping = true;
             const delta = clock.getDelta();
 
             mixer.update( delta );
-            if(currAni!= undefined)
-            {
-                console.log(currAni.time)
+            // if(currAni!= undefined)
+            // {
+            //     console.log(currAni.time)
             
 
-                if (currAni.time +delta >= currAni.getClip().duration) {
-                    console.log("running");
-                    currAni.paused = true;
-                    //currAni.stop();
-                  //  mixer.clipAction( anis[i] ).stop();
-                    // Additional code to handle the end of the animation
-                }
-            }
+            //     if (currAni.time +delta >= currAni.getClip().duration) {
+            //         console.log("running");
+            //         currAni.paused = true;
+            //         //currAni.stop();
+            //       //  mixer.clipAction( anis[i] ).stop();
+            //         // Additional code to handle the end of the animation
+            //     }
+            // }
             // Update any animations or interactions here
            
 
@@ -137,7 +137,10 @@ controls.enableDamping = true;
                 // You can check for a specific key
                 if (event.key === 'Enter') {
                    currAni= mixer.clipAction( anis[i] );
-                   mixer.clipAction( anis[i] ).play();
+                   currAni.setLoop(THREE.LoopOnce);
+                   currAni.clampWhenFinished = true;
+                   currAni.enable=true;
+                 mixer.clipAction( anis[i] ).play();
                     console.log('Enter key pressed!');
                     audio2.play();
                     i++;

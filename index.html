@@ -6,6 +6,10 @@
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		
 		<style>
+			@font-face {
+		font-family: coneria;
+		src: url(Demo_ConeriaScript.ttf);
+}
 			body {
 				background-color: #bfe3dd;
 				color: #000;
@@ -15,16 +19,21 @@
 				color: #2983ff;
 			}
 		</style>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
 	</head>
 
 	<body>
 
 		<div id="container"></div>
-
+		<br>
 		<div id="info">
-			<a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> webgl - animation - keyframes<br/>
-			Model: <a href="https://artstation.com/artwork/1AGwX" target="_blank" rel="noopener">Littlest Tokyo</a> by
-			<a href="https://artstation.com/glenatron" target="_blank" rel="noopener">Glen Fox</a>, CC Attribution.
+			
+			<p style="text-align: center; font-family: 'Lobster', sans-serif; font-size: 38px;">Hold left click and drag to move the camera, scroll to zoom in and out. </h3>
+				<br>
+				<p style="text-align: center; font-family: 'Lobster', sans-serif;font-size: 18px">Made with 💛 by Roop(Abhiroop).All Textures, stickers and the original idea by David. Thanks to the whole Eufre community.</h2>
+					
 		</div>
 		<audio id="myAudio" loop>
 			<source src="myAudio.mp3" type="audio/mp3">
@@ -43,7 +52,9 @@
 				}
 			}
 		</script>
+		
 
 	</body>
+	
 
 </html>
