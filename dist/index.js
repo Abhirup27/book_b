@@ -130,23 +130,47 @@ controls.enableDamping = true;
             // Code to run when all resources have been loaded
             console.log("All resources have been loaded!");
             // Your initialization code here
-            document.addEventListener('keydown', function(event) {
-                // 'event.key' contains the pressed key
-                console.log('Key pressed:', event.key);
-            
-                // You can check for a specific key
-                if (event.key === 'Enter') {
-                   currAni= mixer.clipAction( anis[i] );
-                   currAni.setLoop(THREE.LoopOnce);
-                   currAni.clampWhenFinished = true;
-                   currAni.enable=true;
-                 mixer.clipAction( anis[i] ).play();
-                    console.log('Enter key pressed!');
-                    audio2.play();
-                    i++;
-                }
-            });
-        };
+            if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+                document.addEventListener("touchstart", function(event) {
+                    // 'event.key' contains the pressed key
+                    console.log('Key pressed:', event.key);
+                
+                    // You can check for a specific key
+                
+                       currAni= mixer.clipAction( anis[i] );
+                       currAni.setLoop(THREE.LoopOnce);
+                       currAni.clampWhenFinished = true;
+                       currAni.enable=true;
+                     mixer.clipAction( anis[i] ).play();
+                        //console.log('Enter key pressed!');
+                        audio2.play();
+                        i++;
+                    
+                });
+                // true for mobile device
+               // document.write("mobile device");
+              }else{
+                // false for not mobile device
+                //document.write("not mobile device");
+                document.addEventListener('keydown', function(event) {
+                    // 'event.key' contains the pressed key
+                    console.log('Key pressed:', event.key);
+                
+                    // You can check for a specific key
+                    if (event.key === 'Enter') {
+                       currAni= mixer.clipAction( anis[i] );
+                       currAni.setLoop(THREE.LoopOnce);
+                       currAni.clampWhenFinished = true;
+                       currAni.enable=true;
+                     mixer.clipAction( anis[i] ).play();
+                        console.log('Enter key pressed!');
+                        audio2.play();
+                        i++;
+                    }
+                });
+            };
+              }
+          
 
 //         const model = gltf.scene;
 //     //model.position.set( 1, 1, 0 );
