@@ -157,13 +157,13 @@ controls.enableDamping = true;
             // Your initialization code here
             if(isMobile()){
                 console.log(navigator.userAgent)
-                document.addEventListener("touchstart", function(event) {
+                document.addEventListener("touchend", function(event) {
                     // 'event.key' contains the pressed key
                    // console.log('Key pressed:', event.key);
                     var touchPoints = event.touches.length;
                     // You can check for a specific key
                     console.log('touches:', touchPoints);
-                    if(touchPoints==2)
+                    if(touchPoints==3)
                     {
                         currAni= mixer.clipAction( anis[i] );
                        currAni.setLoop(THREE.LoopOnce);
@@ -181,7 +181,7 @@ controls.enableDamping = true;
                         audio2.play();
                         i++;
                     }
-                    if(touchPoints>2)
+                    if(touchPoints>3)
                     {
                         if(i!=0)
                         { 
