@@ -1,10 +1,10 @@
-import * as THREE from 'https://unpkg.com/three@0.127.0/build/three.module.js';
-import Stats from 'https://unpkg.com/three@0.127.0/examples/jsm/libs/stats.module.js';
-import {OrbitControls} from 'https://unpkg.com/three@0.127.0/examples/jsm/controls/OrbitControls.js'
-import { RoomEnvironment } from 'https://unpkg.com/three@0.127.0/examples/jsm/environments/RoomEnvironment.js';
+import * as THREE from 'https://unpkg.com/three@0.149.0/build/three.module.js';
+import Stats from 'https://unpkg.com/three@0.149.0/examples/jsm/libs/stats.module.js';
+import {OrbitControls} from 'https://unpkg.com/three@0.149.0/examples/jsm/controls/OrbitControls.js'
+import { RoomEnvironment } from 'https://unpkg.com/three@0.149.0/examples/jsm/environments/RoomEnvironment.js';
 
-import { GLTFLoader } from 'https://unpkg.com/three@0.127.0/examples/jsm/loaders/GLTFLoader.js';
-import { DRACOLoader } from 'https://unpkg.com/three@0.127.0/examples/jsm/loaders/DRACOLoader.js';
+import { GLTFLoader } from 'https://unpkg.com/three@0.149.0/examples/jsm/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'https://unpkg.com/three@0.149.0/examples/jsm/loaders/DRACOLoader.js';
 
 var scene = new THREE.Scene();
 
@@ -31,6 +31,11 @@ audio2.addEventListener('ended', function() {
 });
 
 
+document.getElementsByTagName("body")[0].style.marginTop=0;
+var raycaster;
+
+    var mouse = new THREE.Vector2();
+
 // Start playing the audio
 
         // Set up a camera
@@ -41,27 +46,89 @@ audio2.addEventListener('ended', function() {
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
         var myElement = document.getElementsByTagName('canvas');
+        var myTextElement1 = document.getElementById('head');
+        var myTextElement2 = document.getElementById('head2');
+        var screenWidth = window.innerWidth;
+        var screenHeight = window.innerHeight;
+      myTextElement1.style.marginTop=0;
+        if(isMobile())
+{
+        var textSize1 = Math.min(screenWidth, screenHeight) * 0.04; // Adjust this factor as needed
+        var textSize2 = Math.min(screenWidth, screenHeight) * 0.03; 
+        myTextElement1.style.fontSize = textSize1 + 'px';
+        myTextElement2.style.fontSize = textSize2 + 'px';
 
+        }
+        else
+        {
+            if(screenWidth>1920 && screenHeight>1080)
+        {
 
+            var textSize1 = Math.min(screenWidth, screenHeight) * 0.02; // Adjust this factor as needed
+        var textSize2 = Math.min(screenWidth, screenHeight) * 0.01; 
+        myTextElement1.style.fontSize = textSize1 + 'px';
+        myTextElement2.style.fontSize = textSize2 + 'px';
+        }
+        else
+        {
+            var textSize1 = Math.min(screenWidth, screenHeight) * 0.04; // Adjust this factor as needed
+            var textSize2 = Math.min(screenWidth, screenHeight) * 0.02; 
+            myTextElement1.style.fontSize = textSize1 + 'px';
+            myTextElement2.style.fontSize = textSize2 + 'px';
+        }
+        }
+
+    // Set the font size of the text element
+     
         window.addEventListener('resize', setElementSize);
 
         function setElementSize() {
             myElement = document.getElementsByTagName('canvas');
             var screenWidth = window.innerWidth;
             var screenHeight = window.innerHeight;
+            if(isMobile())
+{
+            var textSize1 = Math.min(screenWidth, screenHeight) * 0.04; // Adjust this factor as needed
+            var textSize2 = Math.min(screenWidth, screenHeight) * 0.03; 
+            }
+            else
+            if(screenWidth>1920 && screenHeight>1080)
+            {
     
+                var textSize1 = Math.min(screenWidth, screenHeight) * 0.02; // Adjust this factor as needed
+            var textSize2 = Math.min(screenWidth, screenHeight) * 0.01; 
+            myTextElement1.style.fontSize = textSize1 + 'px';
+            myTextElement2.style.fontSize = textSize2 + 'px';
+            }
+            else
+            {
+                var textSize1 = Math.min(screenWidth, screenHeight) * 0.04; // Adjust this factor as needed
+                var textSize2 = Math.min(screenWidth, screenHeight) * 0.02; 
+                myTextElement1.style.fontSize = textSize1 + 'px';
+                myTextElement2.style.fontSize = textSize2 + 'px';
+            }
+
+        // Set the font size of the text element
+             myTextElement1.style.fontSize = textSize1 + 'px';
+             myTextElement2.style.fontSize = textSize2 + 'px';
             // Set the size of the element, you can adjust this logic as needed
             //var newSize = Math.min(screenWidth, screenHeight) * 0.8; // For example, 80% of the smaller dimension
-            myElement[3].style.width = screenWidth + 'px';
-            myElement[3].style.height = screenHeight + 'px';
+           // myElement[3].style.width = screenWidth + 'px';
+         //   myElement[3].style.height = screenHeight + 'px';
+
+            camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+
+        // Update the renderer size to match the new window dimensions
+        renderer.setSize(window.innerWidth, window.innerHeight);
         }
 
         let mixer;
         const clock = new THREE.Clock();
 			const container = document.getElementById( 'container' );
 
-			const stats = new Stats();
-			container.appendChild( stats.dom );
+			// const stats = new Stats();
+			// container.appendChild( stats.dom );
         const pmremGenerator = new THREE.PMREMGenerator( renderer );
 
 
@@ -69,7 +136,7 @@ scene.background = new THREE.Color( 0xbfe3dd );
 scene.environment = pmremGenerator.fromScene( new RoomEnvironment( renderer ), 0.001 ).texture;
 scene.environment.envMapIntensity =0.0001
 const camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 100 );
-camera.position.set( 5, 2, 8 );
+camera.position.set( 7, 5, 8 );
 
 const controls = new OrbitControls( camera, renderer.domElement );
 controls.target.set( 0, 0.5, 0 );
@@ -91,8 +158,17 @@ controls.enableDamping = true;
             model.position.set( 1, 1, 0 );
             model.scale.set( 10, 10, 10 );
             scene.add( model );
+           // centerCameraOnObject(model)
             mixer = new THREE.AnimationMixer( model );
             anis=gltf.animations;
+            raycaster = new THREE.Raycaster();
+            raycaster.params.Far = 100000.0;
+            raycaster.far= 100000.0;
+           // setElementSize()
+            // Event listener for mouse movement
+            document.addEventListener('mousedown', onMouseDown, false);
+    
+            document.addEventListener('touchstart', onMouseDown, false);
 				//mixer.clipAction( gltf.animations[ 3 ] ).play();
 
 
@@ -118,6 +194,7 @@ controls.enableDamping = true;
             const delta = clock.getDelta();
 
             mixer.update( delta );
+
             // if(currAni!= undefined)
             // {
             //     console.log(currAni.time)
@@ -136,8 +213,9 @@ controls.enableDamping = true;
 
             controls.update();
 
-            stats.update();
+            //stats.update();
             renderer.render(scene, camera);
+            
         }
         //animate();
 
@@ -214,7 +292,7 @@ controls.enableDamping = true;
                     console.log('Key pressed:', event.key);
                 
                     // You can check for a specific key
-                    if (event.key === 'Enter') {
+                    if (event.key === 'e') {
                        currAni= mixer.clipAction( anis[i] );
                        currAni.setLoop(THREE.LoopOnce);
                        currAni.timeScale=1;
@@ -231,7 +309,7 @@ controls.enableDamping = true;
                         audio2.play();
                         i++;
                     }
-                    if (event.key === 'Backspace') {
+                    if (event.key === 'q') {
                         if(i!=0)
                        { 
                         i--;
@@ -254,6 +332,46 @@ controls.enableDamping = true;
                 });
             };
               }
+
+
+              function onMouseDown(event) {
+              
+                // Check if it's a left mouse click (button code 0)
+                if (event.button === 0) {
+                    
+                    // Calculate normalized device coordinates (NDC) for the mouse pointer
+                    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+                    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        
+                    // Update the picking ray with the camera and mouse position
+                  
+                    raycaster.setFromCamera(mouse, camera);
+
+        
+                    // Perform raycast to find intersected objects
+                    var intersects = raycaster.intersectObjects(scene.children, true);
+        
+                    if (intersects.length > 0) {
+                        console.log("rrr")
+                        // Get the first intersected object
+                        var intersectedObject = intersects[0].point;
+                        console.log(intersectedObject)
+        
+                        // Center the camera on the intersected object
+                        centerCameraOnObject(intersectedObject);
+                    }
+                }
+            }
+
+            function centerCameraOnObject(object) {
+                // Set the camera position to center on the object
+               // camera.position.copy(object.position);
+                // Optionally, adjust the camera position or rotation as needed
+        
+                // Look at the object
+                controls.target.copy(object)
+               // camera.lookAt(object);
+            }
           
 
 //         const model = gltf.scene;

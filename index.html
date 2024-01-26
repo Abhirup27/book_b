@@ -27,12 +27,11 @@
 	<body>
 
 		<div id="container"></div>
-		<br>
 		<div id="info">
 			
-			<p style="text-align: center; font-family: 'Lobster', sans-serif; font-size: 28px;">Hold left click and drag to move the camera, scroll to zoom in and out. Then Press Enter to open the next page and backspace to view the previous one.</h3>
+			<p style="text-align: center; font-family: 'Lobster', sans-serif; font-size: 28px;" id="head">Hold left click and drag to move the camera, scroll to zoom in and out. Then Press E to open the next page and Q to view the previous one. Tap on book to center it.</h3>
 				<br>
-				<p style="text-align: center; font-family: 'Lobster', sans-serif;font-size: 18px">Made with 💛 by Roop(Abhiroop).All Textures and the original idea by 💛 David. The stickers were provided by 💛 jkeenan Thanks to the whole 💛 Eufre 💛  community.</h2>
+				<p style="text-align: center; font-family: 'Lobster', sans-serif;font-size: 18px" id="head2">Made with 💛 by Roop(Abhiroop).All Textures and the original idea by 💛 David. The stickers were provided by 💛 jkeenan Thanks to the whole Eufre community 💛.</h2>
 					
 		</div>
 		<audio id="myAudio" loop>
@@ -43,15 +42,16 @@
 			<source src="myAudio2.wav" type="audio/wav">
 			Your browser does not support the audio element.
 		</audio>
-  <script type="module" src="./index.js"></script>
 		<script type="importmap">
 			{
 				"imports": {
-					"three": "../build/three.module.js",
-					"three/addons/": "./jsm/"
+					"three": "https://unpkg.com/three@0.149.0/build/three.module.js",
+					"three/addons/": "https://unpkg.com/three@0.149.0/examples/jsm/"
 				}
 			}
 		</script>
+		
+  <script type="module" src="./index.js"></script>
 		
 
 	</body>
