@@ -40,6 +40,22 @@ audio2.addEventListener('ended', function() {
         var renderer = new THREE.WebGLRenderer();
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
+        var myElement = document.getElementsByTagName('canvas');
+
+
+        window.addEventListener('resize', setElementSize);
+
+        function setElementSize() {
+            myElement = document.getElementsByTagName('canvas');
+            var screenWidth = window.innerWidth;
+            var screenHeight = window.innerHeight;
+    
+            // Set the size of the element, you can adjust this logic as needed
+            //var newSize = Math.min(screenWidth, screenHeight) * 0.8; // For example, 80% of the smaller dimension
+            myElement[3].style.width = screenWidth + 'px';
+            myElement[3].style.height = screenHeight + 'px';
+        }
+
         let mixer;
         const clock = new THREE.Clock();
 			const container = document.getElementById( 'container' );
@@ -134,18 +150,48 @@ controls.enableDamping = true;
                 document.addEventListener("touchstart", function(event) {
                     // 'event.key' contains the pressed key
                     console.log('Key pressed:', event.key);
-                
+                    var touchPoints = event.touches.length;
                     // You can check for a specific key
                 
-                       currAni= mixer.clipAction( anis[i] );
+                    if(touchPoints=2)
+                    {
+                        currAni= mixer.clipAction( anis[i] );
                        currAni.setLoop(THREE.LoopOnce);
-                       currAni.clampWhenFinished = true;
+                       currAni.timeScale=1;
+                       mixer.time=0;
+                       currAni.paused =false;
+                       currAni.time=0;
                        currAni.enable=true;
-                     mixer.clipAction( anis[i] ).play();
-                        //console.log('Enter key pressed!');
+                       currAni.clampWhenFinished = true;
+                      // currAni.enable=true;
+                       mixer.timeScale=1;
+                       currAni.play();
+                    // mixer.clipAction( anis[i] ).play();
+                        console.log('Enter key pressed!');
                         audio2.play();
                         i++;
-                    
+                    }
+                    if(touchPoints>2)
+                    {
+                        if(i!=0)
+                        { 
+                         i--;
+                       currAni= mixer.clipAction( anis[i] );
+                       currAni.setLoop(THREE.LoopOnce);
+                         currAni.timeScale=-1;
+                        currAni.clampWhenFinished = true;
+                        currAni.time=currAni.getClip().duration;
+                        currAni.paused =false;
+                         currAni.enable=true;
+                         
+                         currAni.play();
+                         //mixer.timeScale=-1;
+                     //  mixer.clipAction( anis[i] ).play();
+                          console.log('Enter key pressed!');
+                          audio2.play();
+                          
+                         }
+                    }
                 });
                 // true for mobile device
                // document.write("mobile device");
@@ -160,13 +206,40 @@ controls.enableDamping = true;
                     if (event.key === 'Enter') {
                        currAni= mixer.clipAction( anis[i] );
                        currAni.setLoop(THREE.LoopOnce);
-                       currAni.clampWhenFinished = true;
+                       currAni.timeScale=1;
+                       mixer.time=0;
+                       currAni.paused =false;
+                       currAni.time=0;
                        currAni.enable=true;
-                     mixer.clipAction( anis[i] ).play();
+                       currAni.clampWhenFinished = true;
+                      // currAni.enable=true;
+                       mixer.timeScale=1;
+                       currAni.play();
+                    // mixer.clipAction( anis[i] ).play();
                         console.log('Enter key pressed!');
                         audio2.play();
                         i++;
                     }
+                    if (event.key === 'Backspace') {
+                        if(i!=0)
+                       { 
+                        i--;
+                      currAni= mixer.clipAction( anis[i] );
+                      currAni.setLoop(THREE.LoopOnce);
+                        currAni.timeScale=-1;
+                       currAni.clampWhenFinished = true;
+                       currAni.time=currAni.getClip().duration;
+                       currAni.paused =false;
+                        currAni.enable=true;
+                        
+                        currAni.play();
+                        //mixer.timeScale=-1;
+                    //  mixer.clipAction( anis[i] ).play();
+                         console.log('Enter key pressed!');
+                         audio2.play();
+                         
+                        }
+                     }
                 });
             };
               }
