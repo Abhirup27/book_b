@@ -74,8 +74,8 @@ var raycaster;
         }
         else
         {
-            var textSize1 = Math.min(screenWidth, screenHeight) * 0.04; // Adjust this factor as needed
-            var textSize2 = Math.min(screenWidth, screenHeight) * 0.02; 
+            var textSize1 = Math.min(screenWidth, screenHeight) * 0.02; // Adjust this factor as needed
+            var textSize2 = Math.min(screenWidth, screenHeight) * 0.015; 
             myTextElement1.style.fontSize = textSize1 + 'px';
             myTextElement2.style.fontSize = textSize2 + 'px';
         }
