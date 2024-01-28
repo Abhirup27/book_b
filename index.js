@@ -12,6 +12,7 @@ var audio = document.getElementById('myAudio');
 
 // Optional: You can set other audio properties here, such as volume, playback speed, etc.
 audio.volume = 0.5;
+audio.autoplay = true;
 
 // Event listener to restart the audio when it ends
 audio.addEventListener('ended', function() {
@@ -35,6 +36,8 @@ document.getElementsByTagName("body")[0].style.marginTop=0;
 var raycaster;
 
     var mouse = new THREE.Vector2();
+    mouse.x=0
+    mouse.y=0
 
 // Start playing the audio
 
@@ -136,10 +139,10 @@ scene.background = new THREE.Color( 0xbfe3dd );
 scene.environment = pmremGenerator.fromScene( new RoomEnvironment( renderer ), 0.001 ).texture;
 scene.environment.envMapIntensity =0.0001
 const camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 100 );
-camera.position.set( 7, 5, 8 );
+camera.position.set( 1, 1, 5 );
 
 const controls = new OrbitControls( camera, renderer.domElement );
-controls.target.set( 0, 0.5, 0 );
+controls.target.set(  1, 1, 0 );
 controls.update();
 controls.enablePan = false;
 controls.enableDamping = true;
@@ -147,17 +150,19 @@ controls.enableDamping = true;
 
         // Load a 3D model
         var loader = new GLTFLoader();
-
+        let model ;//= gltf.scene;
         var dracoLoader = new DRACOLoader();
         dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
         let anis;
         let currAni;
         loader.setDRACOLoader(dracoLoader);
         loader.load('book.glb', function (gltf) {
-            const model = gltf.scene;
+            model = gltf.scene;
             model.position.set( 1, 1, 0 );
             model.scale.set( 10, 10, 10 );
+
             scene.add( model );
+            
            // centerCameraOnObject(model)
             mixer = new THREE.AnimationMixer( model );
             anis=gltf.animations;
@@ -167,11 +172,12 @@ controls.enableDamping = true;
            // setElementSize()
             // Event listener for mouse movement
             document.addEventListener('mousedown', onMouseDown, false);
-    
+            document.addEventListener('mousemove', onMouseMove, false);
             document.addEventListener('touchstart', onMouseDown, false);
 				//mixer.clipAction( gltf.animations[ 3 ] ).play();
 
-
+               // controls.update();
+               
 				animate();
         });
 
@@ -185,7 +191,7 @@ controls.enableDamping = true;
 
         // Animate the scene (Optional)
         function animate() {
-
+          moveBook()
             if(audio.currentTime==0)
             {
                 audio.play();
@@ -332,35 +338,64 @@ controls.enableDamping = true;
                 });
             };
               }
+              var isMouse2Down = false;
 
+              function moveBook()
+              {
+                if(isMouse2Down)
+                {
+                    const delta = clock.getDelta();
+                    if(model.position.x!= mouse.x)
+                    {
+                     model.position.x += delta*mouse.x;
+                    }
+                }
+              }
+
+
+              document.addEventListener('mouseup', function(event) {
+                if (event.button === 2) { // Check if it's the left mouse button
+                    isMouse2Down = false;
+                    console.log('Mouse2 button is released');
+                }
+            });
 
               function onMouseDown(event) {
               
                 // Check if it's a left mouse click (button code 0)
-                if (event.button === 0) {
-                    
-                    // Calculate normalized device coordinates (NDC) for the mouse pointer
-                    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-                    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+                // if (event.button === 1) {
+                //     console.log("rrr")
+                //     // Calculate normalized device coordinates (NDC) for the mouse pointer
+                //     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+                //     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
         
-                    // Update the picking ray with the camera and mouse position
+                //     // Update the picking ray with the camera and mouse position
                   
-                    raycaster.setFromCamera(mouse, camera);
+                //     raycaster.setFromCamera(mouse, camera);
 
         
-                    // Perform raycast to find intersected objects
-                    var intersects = raycaster.intersectObjects(scene.children, true);
+                //     // Perform raycast to find intersected objects
+                //     var intersects = raycaster.intersectObjects(scene.children, true);
         
-                    if (intersects.length > 0) {
-                        console.log("rrr")
-                        // Get the first intersected object
-                        var intersectedObject = intersects[0].point;
-                        console.log(intersectedObject)
+                //     if (intersects.length > 0) {
+                //         console.log("rrr")
+                //         // Get the first intersected object
+                //         var intersectedObject = intersects[0].point;
+                //         console.log(intersectedObject)
         
-                        // Center the camera on the intersected object
-                        centerCameraOnObject(intersectedObject);
-                    }
-                }
+                //         // Center the camera on the intersected object
+                //         centerCameraOnObject(intersectedObject);
+                //     }
+                // }
+                if (event.buttons ==2) {
+                    // model.position.x = mouse.x; // Adjust the factor as needed
+                   
+                        // model.position.x -= mouse.x;
+                        console.log('Mouse2 button is pressed');
+                        isMouse2Down=true;
+                       // moveBook()
+                      
+                     }
             }
 
             function centerCameraOnObject(object) {
@@ -373,6 +408,23 @@ controls.enableDamping = true;
                // camera.lookAt(object);
             }
           
+            function onMouseMove(event) {
+                console.log(mouse)
+                // Calculate normalized device coordinates (NDC) for the mouse pointer
+                mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+                mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+                //console.log(event.buttons)
+                console.log(mouse)
+                console.log(event.clientX )
+                // Update the position of the cube based on mouse.x
+            
+                // else if(event.buttons ==1)
+                // {
+                //     model.position.y = mouse.y;
+                // }
+
+
+            }
 
 //         const model = gltf.scene;
 //     //model.position.set( 1, 1, 0 );
