@@ -18,6 +18,16 @@
 			a {
 				color: #2983ff;
 			}
+			@keyframes breathing {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+/* Apply the animation to the element with id "loading" */
+#head {
+  animation: breathing 1.5s infinite; /* Repeat the animation infinitely */
+}
 		</style>
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,11 +39,14 @@
 		<div id="container"></div>
 		<div id="info">
 			
-			<p style="text-align: center; font-family: 'Lobster', sans-serif; font-size: 28px;" id="head">Hold left click and drag to rotate the camera, scroll to zoom in and out. Hold right click and move the mouse sideways when zoomed in.Press E to open the next page and Q to view the previous one.</h3>
+			<p style="text-align: center; font-family: 'Lobster', sans-serif; font-size: 28px;" id="head">Loading... Reload if nothing comes up.</h3>
 				<br>
 				<p style="text-align: center; font-family: 'Lobster', sans-serif;font-size: 18px" id="head2">Made with 💛 by Roop(Abhiroop).All Textures and the original idea by 💛 David. The sticker ideas were provided by 💛 jkeenan. Thanks to the whole Eufre community 💛.</h2>
 					
+					
 		</div>
+	
+		
 		<audio id="myAudio" loop>
 			<source src="myAudio.mp3" type="audio/mp3">
 			Your browser does not support the audio element.

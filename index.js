@@ -60,6 +60,7 @@ var raycaster;
         var textSize2 = Math.min(screenWidth, screenHeight) * 0.03; 
         myTextElement1.style.fontSize = textSize1 + 'px';
         myTextElement2.style.fontSize = textSize2 + 'px';
+        myTextElement1.innerHTML='Hold tap and move to rotate, Double tap with 2 fingers to turn to the next page.Single tap with two fingers to return to previous page. ';
 
         }
         else
@@ -143,43 +144,14 @@ camera.position.set( 1, 1, 5 );
 
 const controls = new OrbitControls( camera, renderer.domElement );
 controls.target.set(  1, 1, 0 );
+
 controls.update();
 controls.enablePan = false;
 controls.enableDamping = true;
 
 
         // Load a 3D model
-        var loader = new GLTFLoader();
-        let model ;//= gltf.scene;
-        var dracoLoader = new DRACOLoader();
-        dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
-        let anis;
-        let currAni;
-        loader.setDRACOLoader(dracoLoader);
-        loader.load('book.glb', function (gltf) {
-            model = gltf.scene;
-            model.position.set( 1, 1, 0 );
-            model.scale.set( 10, 10, 10 );
-
-            scene.add( model );
-            
-           // centerCameraOnObject(model)
-            mixer = new THREE.AnimationMixer( model );
-            anis=gltf.animations;
-            raycaster = new THREE.Raycaster();
-            raycaster.params.Far = 100000.0;
-            raycaster.far= 100000.0;
-           // setElementSize()
-            // Event listener for mouse movement
-            document.addEventListener('mousedown', onMouseDown, false);
-            document.addEventListener('mousemove', onMouseMove, false);
-            document.addEventListener('touchstart', onMouseDown, false);
-				//mixer.clipAction( gltf.animations[ 3 ] ).play();
-
-               // controls.update();
-               
-				animate();
-        });
+        
 
         // Set up lights (Optional)
         var light = new THREE.AmbientLight(0x404040); // soft white light
@@ -224,7 +196,7 @@ controls.enableDamping = true;
             
         }
         //animate();
-
+        let model ;//= gltf.scene;
         function isMobile() {
             var check = false;
             (function(a){
@@ -234,6 +206,46 @@ controls.enableDamping = true;
             return check;
           };
         window.onload = function() {
+            
+            var loader = new GLTFLoader();
+       
+        var dracoLoader = new DRACOLoader();
+        dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
+        let anis;
+        let currAni;
+        loader.setDRACOLoader(dracoLoader);
+        loader.load('book.glb', function (gltf) {
+            model = gltf.scene;
+            model.position.set( 1, 1, 0 );
+            model.scale.set( 10, 10, 10 );
+
+            scene.add( model );
+            
+           // centerCameraOnObject(model)
+            mixer = new THREE.AnimationMixer( model );
+            anis=gltf.animations;
+            raycaster = new THREE.Raycaster();
+            raycaster.params.Far = 100000.0;
+            raycaster.far= 100000.0;
+           // setElementSize()
+            // Event listener for mouse movement
+            document.addEventListener('mousedown', onMouseDown, false);
+            document.addEventListener('mousemove', onMouseMove, false);
+           // document.addEventListener('touchstart', onMouseDown, false);
+				//mixer.clipAction( gltf.animations[ 3 ] ).play();
+
+               // controls.update();
+            //    var parentElement =document.getElementById("loading-div")
+            //    var eletodelete = document.getElementById("loading")
+            //    parentElement.removeChild(eletodelete)
+            //    parentElement.remove()
+               
+               myTextElement1.innerHTML ="Hold left click and drag to rotate the camera, scroll to zoom in and out. Hold right click and move the mouse sideways when zoomed in.Press E to open the next page and Q to view the previous one.";
+             //  body.removeChild(parentElement)
+				animate();
+
+        });
+
             console.log(isMobile())
             
             // Code to run when all resources have been loaded
@@ -241,32 +253,17 @@ controls.enableDamping = true;
             // Your initialization code here
             if(isMobile()){
                 console.log(navigator.userAgent)
-                document.addEventListener("touchend", function(event) {
-                    // 'event.key' contains the pressed key
-                   // console.log('Key pressed:', event.key);
+
+                var timeout;
+                var lastTap = 0;
+                document.addEventListener('touchend', function(event) {
+                    var currentTime = new Date().getTime();
+                    var tapLength = currentTime - lastTap;
                     var touchPoints = event.touches.length;
-                    // You can check for a specific key
-                    console.log('touches:', touchPoints);
-                    if(touchPoints==3)
-                    {
-                        currAni= mixer.clipAction( anis[i] );
-                       currAni.setLoop(THREE.LoopOnce);
-                       currAni.timeScale=1;
-                       mixer.time=0;
-                       currAni.paused =false;
-                       currAni.time=0;
-                       currAni.enable=true;
-                       currAni.clampWhenFinished = true;
-                      // currAni.enable=true;
-                       mixer.timeScale=1;
-                       currAni.play();
-                    // mixer.clipAction( anis[i] ).play();
-                        console.log('Enter key pressed!');
-                        audio2.play();
-                        i++;
-                    }
-                    if(touchPoints>3)
-                    {
+                    console.log(touchPoints)
+                    clearTimeout(timeout);
+                    if (tapLength < 500 && tapLength > 0 &&touchPoints==1) {
+                        //elm2.innerHTML = 'Double Tap';
                         if(i!=0)
                         { 
                          i--;
@@ -281,12 +278,68 @@ controls.enableDamping = true;
                          currAni.play();
                          //mixer.timeScale=-1;
                      //  mixer.clipAction( anis[i] ).play();
-                          console.log('Enter key pressed!');
+                          console.log('double tap!');
                           audio2.play();
                           
                          }
+                        event.preventDefault();
+                    } else if(touchPoints==1) {
+                        //elm2.innerHTML = 'Single Tap';
+                        timeout = setTimeout(function() {
+                          //  elm2.innerHTML = 'Single Tap (timeout)';
+                          
+                          currAni= mixer.clipAction( anis[i] );
+                          currAni.setLoop(THREE.LoopOnce);
+                          currAni.timeScale=1;
+                          mixer.time=0;
+                          currAni.paused =false;
+                          currAni.time=0;
+                          currAni.enable=true;
+                          currAni.clampWhenFinished = true;
+                         // currAni.enable=true;
+                          mixer.timeScale=1;
+                          currAni.play();
+                       // mixer.clipAction( anis[i] ).play();
+                           console.log('single tap(timeout)');
+                           audio2.play();
+                           i++;
+                        
+                            clearTimeout(timeout);
+                        }, 500);
                     }
+                    lastTap = currentTime;
                 });
+
+                // document.addEventListener("touchend", function(event) {
+                //     // 'event.key' contains the pressed key
+                //    // console.log('Key pressed:', event.key);
+                //     var touchPoints = event.touches.length;
+                //     // You can check for a specific key
+                //     console.log('touches:', touchPoints);
+                //     if(touchPoints==3)
+                //     {
+                //         currAni= mixer.clipAction( anis[i] );
+                //        currAni.setLoop(THREE.LoopOnce);
+                //        currAni.timeScale=1;
+                //        mixer.time=0;
+                //        currAni.paused =false;
+                //        currAni.time=0;
+                //        currAni.enable=true;
+                //        currAni.clampWhenFinished = true;
+                //       // currAni.enable=true;
+                //        mixer.timeScale=1;
+                //        currAni.play();
+                //     // mixer.clipAction( anis[i] ).play();
+                //         console.log('Enter key pressed!');
+                //         audio2.play();
+                //         i++;
+                //     }
+        
+                //     if(touchPoints>3)
+                //     {
+                    
+                //     }
+                // });
                 // true for mobile device
                // document.write("mobile device");
               }else{
