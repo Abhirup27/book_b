@@ -60,7 +60,7 @@ var raycaster;
         var textSize2 = Math.min(screenWidth, screenHeight) * 0.03; 
         myTextElement1.style.fontSize = textSize1 + 'px';
         myTextElement2.style.fontSize = textSize2 + 'px';
-        myTextElement1.innerHTML='Hold tap and move to rotate, Double tap with 2 fingers to turn to the next page.Single tap with two fingers to return to previous page. ';
+        myTextElement1.innerHTML='Hold tap and move to rotate, Single tap to go to the next page and double tap to return to previous one. Hold with 3 fingers and move sideways to move the book. Zoom in and out as usual.';
 
         }
         else
@@ -231,6 +231,11 @@ controls.enableDamping = true;
             // Event listener for mouse movement
             document.addEventListener('mousedown', onMouseDown, false);
             document.addEventListener('mousemove', onMouseMove, false);
+            if(isMobile())
+            {   
+                document.addEventListener('pointermove', onMouseMove, false);
+               
+            }
            // document.addEventListener('touchstart', onMouseDown, false);
 				//mixer.clipAction( gltf.animations[ 3 ] ).play();
 
@@ -239,9 +244,15 @@ controls.enableDamping = true;
             //    var eletodelete = document.getElementById("loading")
             //    parentElement.removeChild(eletodelete)
             //    parentElement.remove()
-               
+               if(!isMobile())
+               { 
                myTextElement1.innerHTML ="Hold left click and drag to rotate the camera, scroll to zoom in and out. Hold right click and move the mouse sideways when zoomed in.Press E to open the next page and Q to view the previous one.";
-             //  body.removeChild(parentElement)
+               }
+               else
+               {
+                myTextElement1.innerHTML ="Hold tap and move to rotate, Single tap to go to the next page and double tap to return to previous one. Hold with 3 fingers and move sideways to move the book. Zoom in and out as usual.";
+               }
+               //  body.removeChild(parentElement)
 				animate();
 
         });
@@ -256,10 +267,14 @@ controls.enableDamping = true;
 
                 var timeout;
                 var lastTap = 0;
-                document.addEventListener('touchend', function(event) {
+                document.addEventListener('touchstart', function(event) {
                     var currentTime = new Date().getTime();
                     var tapLength = currentTime - lastTap;
                     var touchPoints = event.touches.length;
+                    if(touchPoints==3)
+                    {
+                        isMouse2Down=true;
+                    }
                     console.log(touchPoints)
                     clearTimeout(timeout);
                     if (tapLength < 500 && tapLength > 0 &&touchPoints==1) {
@@ -405,7 +420,15 @@ controls.enableDamping = true;
                 }
               }
 
-
+              if(isMobile())
+              {
+                document.addEventListener('pointerup', function(event) {
+                   
+                        isMouse2Down = false;
+                        console.log('Mouse2 button is released');
+                    
+                });
+              }
               document.addEventListener('mouseup', function(event) {
                 if (event.button === 2) { // Check if it's the left mouse button
                     isMouse2Down = false;
@@ -414,6 +437,7 @@ controls.enableDamping = true;
             });
 
               function onMouseDown(event) {
+   
               
                 // Check if it's a left mouse click (button code 0)
                 // if (event.button === 1) {
