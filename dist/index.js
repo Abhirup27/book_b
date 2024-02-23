@@ -60,7 +60,7 @@ var raycaster;
         var textSize2 = Math.min(screenWidth, screenHeight) * 0.03; 
         myTextElement1.style.fontSize = textSize1 + 'px';
         myTextElement2.style.fontSize = textSize2 + 'px';
-        myTextElement1.innerHTML='Hold tap and move to rotate, Single tap to go to the next page and double tap to return to previous one. Hold with 3 fingers and move sideways to move the book. Zoom in and out as usual.';
+        myTextElement1.innerHTML='Hold tap and move to rotate, Double tap on right and left sides to turn pages. Hold with 3 fingers and move sideways to move the book.';
 
         }
         else
@@ -250,7 +250,7 @@ controls.enableDamping = true;
                }
                else
                {
-                myTextElement1.innerHTML ="Hold tap and move to rotate, Single tap to go to the next page and double tap to return to previous one. Hold with 3 fingers and move sideways to move the book. Zoom in and out as usual.";
+                myTextElement1.innerHTML ="Hold tap and move to rotate, Double tap on right and left sides to turn pages. Hold with 3 fingers and move sideways to move the book.";
                }
                //  body.removeChild(parentElement)
 				animate();
@@ -278,50 +278,106 @@ controls.enableDamping = true;
                     console.log(touchPoints)
                     clearTimeout(timeout);
                     if (tapLength < 500 && tapLength > 0 &&touchPoints==1) {
-                        //elm2.innerHTML = 'Double Tap';
-                        if(i!=0)
-                        { 
-                         i--;
-                       currAni= mixer.clipAction( anis[i] );
-                       currAni.setLoop(THREE.LoopOnce);
-                         currAni.timeScale=-1;
-                        currAni.clampWhenFinished = true;
-                        currAni.time=currAni.getClip().duration;
-                        currAni.paused =false;
-                         currAni.enable=true;
-                         
-                         currAni.play();
-                         //mixer.timeScale=-1;
-                     //  mixer.clipAction( anis[i] ).play();
-                          console.log('double tap!');
-                          audio2.play();
-                          
-                         }
                         event.preventDefault();
-                    } else if(touchPoints==1) {
-                        //elm2.innerHTML = 'Single Tap';
-                        timeout = setTimeout(function() {
-                          //  elm2.innerHTML = 'Single Tap (timeout)';
+
+
+                        //elm2.innerHTML = 'Double Tap';
+
+                        var touch = event.touches[0];
+    var x = touch.clientX;
+
+    // Get the width of the screen
+    var screenWidth = window.innerWidth;
+
+    // Compare the x-coordinate of the touch with the width of the screen divided by 2
+    if (x < screenWidth / 2) {
+        console.log("Touch on the left side of the screen");
+        if(i!=0)
+        { 
+
+         i--;
+       currAni= mixer.clipAction( anis[i] );
+       currAni.setLoop(THREE.LoopOnce);
+         currAni.timeScale=-1;
+        currAni.clampWhenFinished = true;
+        currAni.time=currAni.getClip().duration;
+        currAni.paused =false;
+         currAni.enable=true;
+         
+         currAni.play();
+         //mixer.timeScale=-1;
+     //  mixer.clipAction( anis[i] ).play();
+          console.log('double tap!');
+          audio2.play();
+          
+         }
+
+
+
+    } else {
+        console.log("Touch on the right side of the screen");
+
+         if(touchPoints==1) {
+            var x = touch.clientX;
+
+            // Get the width of the screen
+            var screenWidth = window.innerWidth;
+            //elm2.innerHTML = 'Single Tap';
+    
+              //  elm2.innerHTML = 'Single Tap (timeout)';
+              
+              currAni= mixer.clipAction( anis[i] );
+              currAni.setLoop(THREE.LoopOnce);
+              currAni.timeScale=1;
+              mixer.time=0;
+              currAni.paused =false;
+              currAni.time=0;
+              currAni.enable=true;
+              currAni.clampWhenFinished = true;
+             // currAni.enable=true;
+              mixer.timeScale=1;
+              currAni.play();
+           // mixer.clipAction( anis[i] ).play();
+               
+               audio2.play();
+               i++;
+            
+                clearTimeout(timeout);
+          
+        }
+
+
+             }
+                   
+                    } 
+                    // else if(touchPoints==1) {
+                    //     var x = touch.clientX;
+
+                    //     // Get the width of the screen
+                    //     var screenWidth = window.innerWidth;
+                    //     //elm2.innerHTML = 'Single Tap';
+                    //     timeout = setTimeout(function() {
+                    //       //  elm2.innerHTML = 'Single Tap (timeout)';
                           
-                          currAni= mixer.clipAction( anis[i] );
-                          currAni.setLoop(THREE.LoopOnce);
-                          currAni.timeScale=1;
-                          mixer.time=0;
-                          currAni.paused =false;
-                          currAni.time=0;
-                          currAni.enable=true;
-                          currAni.clampWhenFinished = true;
-                         // currAni.enable=true;
-                          mixer.timeScale=1;
-                          currAni.play();
-                       // mixer.clipAction( anis[i] ).play();
-                           console.log('single tap(timeout)');
-                           audio2.play();
-                           i++;
+                    //       currAni= mixer.clipAction( anis[i] );
+                    //       currAni.setLoop(THREE.LoopOnce);
+                    //       currAni.timeScale=1;
+                    //       mixer.time=0;
+                    //       currAni.paused =false;
+                    //       currAni.time=0;
+                    //       currAni.enable=true;
+                    //       currAni.clampWhenFinished = true;
+                    //      // currAni.enable=true;
+                    //       mixer.timeScale=1;
+                    //       currAni.play();
+                    //    // mixer.clipAction( anis[i] ).play();
+                    //        console.log('single tap(timeout)');
+                    //        audio2.play();
+                    //        i++;
                         
-                            clearTimeout(timeout);
-                        }, 500);
-                    }
+                         //   clearTimeout(timeout);
+                    //     }, 500);
+                    // }
                     lastTap = currentTime;
                 });
 
@@ -441,7 +497,7 @@ controls.enableDamping = true;
               
                 // Check if it's a left mouse click (button code 0)
                 // if (event.button === 1) {
-                //     console.log("rrr")
+   
                 //     // Calculate normalized device coordinates (NDC) for the mouse pointer
                 //     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
                 //     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
@@ -455,7 +511,7 @@ controls.enableDamping = true;
                 //     var intersects = raycaster.intersectObjects(scene.children, true);
         
                 //     if (intersects.length > 0) {
-                //         console.log("rrr")
+                //   
                 //         // Get the first intersected object
                 //         var intersectedObject = intersects[0].point;
                 //         console.log(intersectedObject)
